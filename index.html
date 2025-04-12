@@ -4,16 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Text to Speech</title>
+  <link rel="icon" href="speaking-head-svgrepo-com.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css" />
+  <script src="https://code.responsivevoice.org/responsivevoice.js?key=Pk55P2ka"></script> <!-- Подключаем библиотеку ResponsiveVoice -->
   <script defer src="main.js"></script>
 </head>
 <body>
   <div class="container">
     <h1>🗣️ Text to Speech</h1>
-    <textarea id="text-input" placeholder="Введите текст..."></textarea>
-    <select id="voice-select"></select>
-    <button onclick="speakText()">Говорить</button>
+    <textarea id="text-input" placeholder="Enter text..."></textarea>
+    <select id="voice-select">
+      <option value="en-US">English (USA)</option>
+      <option value="cs-CZ">Czech</option>
+    </select>
+    <button id="speak-btn">Speak</button>
   </div>
-  <script src="script.js"></script>
 </body>
 </html>
