@@ -1,21 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Text to Speech</title>
-  <link rel="stylesheet" href="styles.css" />
-  <script defer src="main.js"></script>
+  <style>
+    body {
+      background-color: #111;
+      color: #eee;
+      font-family: sans-serif;
+      padding: 20px;
+    }
+    textarea, select, input, button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 1em;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>🗣️ Text to Speech</h1>
-    <textarea id="text-input" placeholder="Enter text..."></textarea>
-    <select id="voice-select">
-      <option value="en-US">English (USA)</option>
-      <option value="cs-CZ">Czech</option>
-    </select>
-    <button id="speak-btn">Speak</button>
-  </div>
+  <h1>🗣️ Text to Speech</h1>
+
+  <textarea id="text" rows="6" placeholder="Enter text..."></textarea>
+
+  <label for="voice">Choose Voice:</label>
+  <select id="voice"></select>
+
+  <label for="rate">Speed (rate):</label>
+  <input type="range" id="rate" min="0.5" max="2" value="1" step="0.1">
+
+  <label for="pitch">Pitch (тембр):</label>
+  <input type="range" id="pitch" min="0" max="2" value="1" step="0.1">
+
+  <button onclick="speak()">🔊 Speak</button>
+
+  <script>
+    const synth = window.speechSynthesis;
+    const voiceSelect = document.getElementById("voice");
+    const rate = document.getElementById("rate");
+    const pitch = document.getElementById("pitch");
+    const textInput = document.getElementById("text");
+
+    let voices = [];
+
+    function populateVoices() {
+      voices = synth.getVoices();
+      voiceSelect.innerHTML = "";
+      voices.forEach((voice, i) => {
+        const option = document.createElement("option");
+        option.value = i;
+        option.textContent = `${voice.name} (${voice.lang})`;
+        voiceSelect.appendChild(option);
+      });
+    }
+
+    populateVoices();
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+      speechSynthesis.onvoiceschanged = populateVoices;
+    }
+
+    function speak() {
+      const utter = new SpeechSynthesisUtterance(textInput.value);
+      const selectedVoice = voices[voiceSelect.value];
+      if (selectedVoice) {
+        utter.voice = selectedVoice;
+      }
+      utter.rate = parseFloat(rate.value);
+      utter.pitch = parseFloat(pitch.value);
+      synth.cancel(); // отмена предыдущей речи
+      synth.speak(utter);
+    }
+  </script>
 </body>
 </html>
